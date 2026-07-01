@@ -1,0 +1,6 @@
+Flask==2.3.3
+Flask-SQLAlchemy==3.1.1
+Flask-Caching==2.1.0
+Werkzeug==2.3.7
+celery==5.3.4
+redis==5.0.1
