@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Manage Companies{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">🏢 Manage Companies</h3>
+
+<!-- Search -->
+<form method="GET" action="/admin/companies" class="row g-3 mb-4">
+    <div class="col-md-8">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search company by name..." value="{{ search }}">
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+{% if companies %}
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Company Name</th>
+            <th>HR Contact</th>
+            <th>Website</th>
+            <th>Status</th>
+            <th>Blacklisted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for company in companies %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ company.company_name }}</td>
+            <td>{{ company.hr_contact or 'N/A' }}</td>
+            <td>
+                {% if company.website %}
+                <a href="{{ company.website }}" target="_blank">Visit</a>
+                {% else %}N/A{% endif %}
+            </td>
+            <td>
+                {% if company.approval_status == "Approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif company.approval_status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if company.is_blacklisted %}
+                    <span class="badge bg-danger">Blacklisted</span>
+                {% else %}
+                    <span class="badge bg-success">Active</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if company.approval_status == "Pending" %}
+                <a href="/admin/company/{{ company.id }}/approve"
+                   class="btn btn-success btn-sm">Approve</a>
+                <a href="/admin/company/{{ company.id }}/reject"
+                   class="btn btn-danger btn-sm">Reject</a>
+                {% endif %}
+
+                {% if company.is_blacklisted %}
+                <a href="/admin/company/{{ company.id }}/activate"
+                   class="btn btn-secondary btn-sm">Unban</a>
+                {% else %}
+                <a href="/admin/company/{{ company.id }}/blacklist"
+                   class="btn btn-dark btn-sm"
+                   onclick="return confirm('Blacklist this company?')">Blacklist</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No companies found.</div>
+{% endif %}
+
+{% endblock %}

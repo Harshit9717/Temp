@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Edit Drive{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-4">Edit Placement Drive</h3>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if success %}
+<div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+<div class="alert alert-warning">
+    Editing this drive will reset its status to <strong>Pending</strong>.
+    Admin will need to approve it again.
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" action="/company/drive/{{ drive.id }}/edit">
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Job Title <span class="text-danger">*</span>
+                </label>
+                <input type="text" name="job_title" class="form-control"
+                       required value="{{ drive.job_title }}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Job Description <span class="text-danger">*</span>
+                </label>
+                <textarea name="job_description" class="form-control"
+                          rows="5" required>{{ drive.job_description }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Application Deadline <span class="text-danger">*</span>
+                </label>
+                <input type="date" name="application_deadline"
+                       class="form-control" required
+                       value="{{ drive.application_deadline }}">
+            </div>
+
+            <hr>
+            <h6 class="text-muted mb-3">
+                Eligibility Criteria
+                <small class="text-info">
+                    (Set 0 or leave blank to allow anyone to apply)
+                </small>
+            </h6>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Eligible Branch</label>
+                    <input type="text" name="eligibility_branch"
+                           class="form-control"
+                           placeholder="Leave blank for all branches"
+                           value="{{ drive.eligibility_branch or '' }}">
+                    <small class="text-muted">Leave blank for all branches</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Minimum CGPA</label>
+                    <input type="number" step="0.01" name="eligibility_cgpa"
+                           class="form-control" min="0" max="10"
+                           placeholder="0 = no minimum"
+                           value="{{ drive.eligibility_cgpa or 0 }}">
+                    <small class="text-muted">Set 0 for no minimum CGPA</small>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Year of Study</label>
+                    <input type="number" name="eligibility_year"
+                           class="form-control" min="0" max="5"
+                           placeholder="0 = any year"
+                           value="{{ drive.eligibility_year or 0 }}">
+                    <small class="text-muted">Set 0 for any year</small>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    Save Changes
+                </button>
+                <a href="/company/drives" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

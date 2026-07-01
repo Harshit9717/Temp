@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Application Details{% endblock %}
+
+{% block content %}
+
+<div class="mb-4">
+    <a href="/student/applications" class="btn btn-secondary btn-sm">
+        Back to My Applications
+    </a>
+</div>
+
+<!-- Status Banner -->
+{% if application.status == "Selected" %}
+<div class="alert alert-success text-center mb-4">
+    <h4>Congratulations! You have been Selected!</h4>
+    <p class="mb-0">
+        You have been selected for <strong>{{ drive.job_title }}</strong>
+        at <strong>{{ company.company_name }}</strong>.
+        Please contact the HR using the details below.
+    </p>
+</div>
+{% elif application.status == "Shortlisted" %}
+<div class="alert alert-warning text-center mb-4">
+    <h4>You have been Shortlisted!</h4>
+    <p class="mb-0">
+        You have been shortlisted for <strong>{{ drive.job_title }}</strong>
+        at <strong>{{ company.company_name }}</strong>.
+        Please check the company details below and wait for further updates.
+    </p>
+</div>
+{% endif %}
+
+<div class="row">
+
+    <!-- Company Details -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-dark text-white">
+                <strong>Company Details</strong>
+            </div>
+            <div class="card-body">
+
+                <p>
+                    <strong>Company Name:</strong>
+                    {{ company.company_name }}
+                </p>
+
+                <p>
+                    <strong>HR Contact:</strong>
+                    {% if company.hr_contact %}
+                        <a href="mailto:{{ company.hr_contact }}">
+                            {{ company.hr_contact }}
+                        </a>
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </p>
+
+                <p>
+                    <strong>Website:</strong>
+                    {% if company.website %}
+                        <a href="{{ company.website }}" target="_blank">
+                            {{ company.website }}
+                        </a>
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </p>
+
+                <p>
+                    <strong>About Company:</strong><br>
+                    {{ company.description or 'No description provided.' }}
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Drive Details -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-dark text-white">
+                <strong>Job Details</strong>
+            </div>
+            <div class="card-body">
+
+                <p>
+                    <strong>Job Title:</strong>
+                    {{ drive.job_title }}
+                </p>
+
+                <p>
+                    <strong>Application Deadline:</strong>
+                    {{ drive.application_deadline }}
+                </p>
+
+                <p>
+                    <strong>Your Application Status:</strong>
+                    {% if application.status == "Selected" %}
+                        <span class="badge bg-success">Selected</span>
+                    {% elif application.status == "Shortlisted" %}
+                        <span class="badge bg-warning text-dark">Shortlisted</span>
+                    {% endif %}
+                </p>
+
+                <p>
+                    <strong>Applied On:</strong>
+                    {{ application.application_date.strftime('%d %B %Y') }}
+                </p>
+
+                <p>
+                    <strong>Job Description:</strong><br>
+                    {{ drive.job_description }}
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Next Steps -->
+<div class="card shadow-sm mt-2">
+    <div class="card-header bg-dark text-white">
+        <strong>Next Steps</strong>
+    </div>
+    <div class="card-body">
+
+        {% if application.status == "Selected" %}
+        <ul class="mb-0">
+            <li>
+                Contact HR at
+                <strong>{{ company.hr_contact or 'the company' }}</strong>
+                to confirm your joining.
+            </li>
+            <li>
+                Visit the company website at
+                {% if company.website %}
+                <a href="{{ company.website }}" target="_blank">
+                    {{ company.website }}
+                </a>
+                {% else %}
+                <strong>the company</strong>
+                {% endif %}
+                for more information.
+            </li>
+            <li>
+                Keep your documents ready for the joining process.
+            </li>
+            <li>
+                Congratulations once again on your placement!
+            </li>
+        </ul>
+
+        {% elif application.status == "Shortlisted" %}
+        <ul class="mb-0">
+            <li>
+                You have been shortlisted. Wait for further updates
+                from the company.
+            </li>
+            <li>
+                Keep checking your application status regularly.
+            </li>
+            <li>
+                You may contact HR at
+                <strong>{{ company.hr_contact or 'the company' }}</strong>
+                for any queries.
+            </li>
+            <li>
+                Prepare well for the next round of the selection process.
+            </li>
+        </ul>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

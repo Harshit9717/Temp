@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}All Applications{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">📝 All Applications</h3>
+
+{% if applications %}
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Applied On</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in applications %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ app.student.user.name }}</td>
+            <td>{{ app.drive.company.company_name }}</td>
+            <td>{{ app.drive.job_title }}</td>
+            <td>{{ app.application_date.strftime('%d %b %Y') }}</td>
+            <td>
+                {% if app.status == "Applied" %}
+                    <span class="badge bg-secondary">Applied</span>
+                {% elif app.status == "Shortlisted" %}
+                    <span class="badge bg-warning text-dark">Shortlisted</span>
+                {% elif app.status == "Selected" %}
+                    <span class="badge bg-success">Selected</span>
+                {% elif app.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No applications yet.</div>
+{% endif %}
+
+{% endblock %}

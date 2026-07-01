@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Login - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center">
+                <h4>🎓 Placement Portal Login</h4>
+            </div>
+            <div class="card-body p-4">
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                <form method="POST" action="/login">
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" required
+                               placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required
+                               placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0">
+                    Don't have an account?
+                    <a href="/signup">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Applicants{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-2">Applicants for: <strong>{{ drive.job_title }}</strong></h3>
+<p class="text-muted mb-4">Deadline: {{ drive.application_deadline }}</p>
+
+<a href="/company/drives" class="btn btn-secondary btn-sm mb-3">
+    Back to My Drives
+</a>
+
+{% if applications %}
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Student Name</th>
+            <th>Branch</th>
+            <th>Year</th>
+            <th>CGPA</th>
+            <th>Resume</th>
+            <th>Applied On</th>
+            <th>Current Status</th>
+            <th>Change Status</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for app in applications %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ app.student.user.name }}</td>
+            <td>{{ app.student.branch or 'N/A' }}</td>
+            <td>{{ app.student.year or 'N/A' }}</td>
+            <td>{{ app.student.cgpa or 'N/A' }}</td>
+            <td>
+                {% if app.student.resume %}
+                <a href="{{ app.student.resume }}" target="_blank">View</a>
+                {% else %}
+                N/A
+                {% endif %}
+            </td>
+            <td>{{ app.application_date.strftime('%d %b %Y') }}</td>
+            <td>
+                {% if app.status == "Applied" %}
+                    <span class="badge bg-secondary">Applied</span>
+                {% elif app.status == "Shortlisted" %}
+                    <span class="badge bg-warning text-dark">Shortlisted</span>
+                {% elif app.status == "Selected" %}
+                    <span class="badge bg-success">Selected</span>
+                {% elif app.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="d-flex gap-1 flex-wrap">
+
+                    {% if app.status == "Applied" %}
+
+                        <a href="/company/application/{{ app.id }}/Shortlisted"
+                           class="btn btn-warning btn-sm"
+                           onclick="return confirm('Shortlist this student?')">
+                            Shortlist
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Selected"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Select this student?')">
+                            Select
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Rejected"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Reject this student?')">
+                            Reject
+                        </a>
+
+                    {% elif app.status == "Shortlisted" %}
+
+                        <a href="/company/application/{{ app.id }}/Applied"
+                           class="btn btn-secondary btn-sm"
+                           onclick="return confirm('Move back to Applied?')">
+                            Undo
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Selected"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Select this student?')">
+                            Select
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Rejected"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Reject this student?')">
+                            Reject
+                        </a>
+
+                    {% elif app.status == "Selected" %}
+
+                        <a href="/company/application/{{ app.id }}/Shortlisted"
+                           class="btn btn-warning btn-sm"
+                           onclick="return confirm('Move back to Shortlisted?')">
+                            Move to Shortlist
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Applied"
+                           class="btn btn-secondary btn-sm"
+                           onclick="return confirm('Move back to Applied?')">
+                            Undo Selection
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Rejected"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Reject this student?')">
+                            Reject
+                        </a>
+
+                    {% elif app.status == "Rejected" %}
+
+                        <a href="/company/application/{{ app.id }}/Applied"
+                           class="btn btn-secondary btn-sm"
+                           onclick="return confirm('Move back to Applied?')">
+                            Undo Rejection
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Shortlisted"
+                           class="btn btn-warning btn-sm"
+                           onclick="return confirm('Shortlist this student?')">
+                            Shortlist
+                        </a>
+                        <a href="/company/application/{{ app.id }}/Selected"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Select this student?')">
+                            Select
+                        </a>
+
+                    {% endif %}
+
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% else %}
+<div class="alert alert-info">
+    No students have applied to this drive yet.
+</div>
+{% endif %}
+
+{% endblock %}

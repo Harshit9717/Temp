@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Manage Students{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">🎓 Manage Students</h3>
+
+<!-- Search -->
+<form method="GET" action="/admin/students" class="row g-3 mb-4">
+    <div class="col-md-8">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by student name or email..." value="{{ search }}">
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+{% if students %}
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Branch</th>
+            <th>Year</th>
+            <th>CGPA</th>
+            <th>Blacklisted</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ student.user.name }}</td>
+            <td>{{ student.user.email }}</td>
+            <td>{{ student.branch or 'N/A' }}</td>
+            <td>{{ student.year or 'N/A' }}</td>
+            <td>{{ student.cgpa or 'N/A' }}</td>
+            <td>
+                {% if student.is_blacklisted %}
+                    <span class="badge bg-danger">Blacklisted</span>
+                {% else %}
+                    <span class="badge bg-success">Active</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if student.is_blacklisted %}
+                <a href="/admin/student/{{ student.id }}/activate"
+                   class="btn btn-secondary btn-sm">Unban</a>
+                {% else %}
+                <a href="/admin/student/{{ student.id }}/blacklist"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Blacklist this student?')">Blacklist</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No students found.</div>
+{% endif %}
+
+{% endblock %}

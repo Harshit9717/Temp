@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">🛠️ Admin Dashboard</h3>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Students</h5>
+                <h2>{{ total_students }}</h2>
+                <a href="/admin/students" class="text-white">View All →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Companies</h5>
+                <h2>{{ total_companies }}</h2>
+                <a href="/admin/companies" class="text-white">View All →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Drives</h5>
+                <h2>{{ total_drives }}</h2>
+                <a href="/admin/drives" class="text-white">View All →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Applications</h5>
+                <h2>{{ total_applications }}</h2>
+                <a href="/admin/applications" class="text-white">View All →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5>Quick Actions</h5>
+                <a href="/admin/companies" class="btn btn-outline-success me-2">Manage Companies</a>
+                <a href="/admin/drives" class="btn btn-outline-warning me-2">Manage Drives</a>
+                <a href="/admin/students" class="btn btn-outline-primary me-2">Manage Students</a>
+                <a href="/admin/reports" class="btn btn-outline-info">View Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

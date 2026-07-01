@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}My Drives{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>📋 My Placement Drives</h3>
+    {% if profile and profile.approval_status == "Approved"
+       and not profile.is_blacklisted %}
+    <a href="/company/drive/new" class="btn btn-primary">+ Post New Drive</a>
+    {% endif %}
+</div>
+
+{% if drives %}
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Job Title</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Applicants</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for drive in drives %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ drive.job_title }}</td>
+            <td>{{ drive.application_deadline }}</td>
+            <td>
+                {% if drive.status == "Approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif drive.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% elif drive.status == "Closed" %}
+                    <span class="badge bg-secondary">Closed</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% endif %}
+            </td>
+            <td>{{ drive.applications | length }}</td>
+            <td>
+                <div class="d-flex gap-1 flex-wrap">
+                    <!-- View Applicants -->
+                    <a href="/company/drive/{{ drive.id }}/applicants"
+                       class="btn btn-info btn-sm">
+                        👥 Applicants
+                    </a>
+
+                    <!-- Edit Drive -->
+                    <a href="/company/drive/{{ drive.id }}/edit"
+                       class="btn btn-warning btn-sm">
+                        ✏️ Edit
+                    </a>
+
+                    <!-- Delete Drive -->
+                    <a href="/company/drive/{{ drive.id }}/delete"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm(
+                           'Delete this drive? This will also delete all applications.')">
+                        🗑️ Delete
+                    </a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<div class="alert alert-info">
+    You have not posted any drives yet.
+    {% if profile and profile.approval_status == "Approved" %}
+    <a href="/company/drive/new" class="alert-link">Post your first drive</a>.
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

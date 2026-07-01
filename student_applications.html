@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>My Applications</h3>
+    <a href="/student/export" class="btn btn-outline-secondary">
+        Export as CSV
+    </a>
+</div>
+
+{% if session.get('apply_success') %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session.pop('apply_success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
+{% if applications %}
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Company</th>
+            <th>Job Title</th>
+            <th>Applied On</th>
+            <th>Status</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for app in applications %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ app.drive.company.company_name }}</td>
+            <td>{{ app.drive.job_title }}</td>
+            <td>{{ app.application_date.strftime('%d %b %Y') }}</td>
+            <td>
+                {% if app.status == "Applied" %}
+                    <span class="badge bg-secondary">Applied</span>
+                {% elif app.status == "Shortlisted" %}
+                    <span class="badge bg-warning text-dark">Shortlisted</span>
+                {% elif app.status == "Selected" %}
+                    <span class="badge bg-success">Selected</span>
+                {% elif app.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if app.status == "Selected" %}
+                    <a href="/student/application/{{ app.id }}/details"
+                       class="btn btn-success btn-sm">
+                        View Offer Details
+                    </a>
+                {% elif app.status == "Shortlisted" %}
+                    <a href="/student/application/{{ app.id }}/details"
+                       class="btn btn-warning btn-sm">
+                        View Details
+                    </a>
+                {% else %}
+                    <span class="text-muted">-</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% else %}
+<div class="alert alert-info">
+    You have not applied to any drives yet.
+    <a href="/student/drives" class="alert-link">Browse Drives</a>
+</div>
+{% endif %}
+
+{% endblock %}

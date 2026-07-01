@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Register - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center">
+                <h4>📝 Create Account</h4>
+            </div>
+            <div class="card-body p-4">
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                {% if success %}
+                <div class="alert alert-success">
+                    {{ success }}
+                    <a href="/login" class="alert-link">Click here to login</a>
+                </div>
+                {% endif %}
+
+                <form method="POST" action="/signup">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="name" class="form-control" required
+                               placeholder="Your full name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" required
+                               placeholder="Your email address">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required
+                               placeholder="Choose a strong password" minlength="6">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Register As</label>
+                        <select name="role" class="form-select" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="student">Student</option>
+                            <option value="company">Company</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Register</button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0">
+                    Already have an account?
+                    <a href="/login">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Admin Reports{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">📊 Placement Reports</h3>
+
+<!-- Overall Stats -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Students</h5>
+                <h2>{{ total_students }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Companies</h5>
+                <h2>{{ total_companies }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Drives</h5>
+                <h2>{{ total_drives }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Applications</h5>
+                <h2>{{ total_applications }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Selected</h5>
+                <h2>{{ total_selected }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Stats -->
+<div class="card mb-4">
+    <div class="card-header bg-dark text-white">
+        <strong>📅 Monthly Stats - {{ current_month }}</strong>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card border-primary mb-3">
+                    <div class="card-body text-center">
+                        <h5>Drives This Month</h5>
+                        <h2 class="text-primary">{{ total_drives_month }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-success mb-3">
+                    <div class="card-body text-center">
+                        <h5>Applications This Month</h5>
+                        <h2 class="text-success">{{ total_applied_month }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-danger mb-3">
+                    <div class="card-body text-center">
+                        <h5>Selected This Month</h5>
+                        <h2 class="text-danger">{{ total_selected_month }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Drives This Month Table -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <strong>Drives Created This Month</strong>
+    </div>
+    <div class="card-body">
+        {% if drives_this_month %}
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Applicants</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for drive in drives_this_month %}
+                <tr>
+                    <td>{{ drive.job_title }}</td>
+                    <td>{{ drive.company.company_name }}</td>
+                    <td>{{ drive.application_deadline }}</td>
+                    <td>
+                        {% if drive.status == "Approved" %}
+                            <span class="badge bg-success">Approved</span>
+                        {% elif drive.status == "Pending" %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% else %}
+                            <span class="badge bg-danger">{{ drive.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ drive.applications | length }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No drives created this month.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

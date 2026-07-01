@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Export Triggered{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card text-center shadow">
+            <div class="card-body p-5">
+                <h2 class="text-success mb-3">✅ Export Started!</h2>
+                <p class="text-muted">
+                    Your application history is being prepared as a CSV file.
+                    You will receive an email once it is ready.
+                </p>
+                <a href="/student/applications" class="btn btn-primary mt-3">
+                    Back to My Applications
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

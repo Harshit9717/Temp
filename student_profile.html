@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Student Profile{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">👤 My Profile</h3>
+
+{% if success %}
+<div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" action="/student/profile">
+            <div class="mb-3">
+                <label class="form-label">Branch</label>
+                <input type="text" name="branch" class="form-control" required
+                       placeholder="e.g. Computer Science"
+                       value="{{ profile.branch if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Year of Study</label>
+                <input type="number" name="year" class="form-control" required
+                       min="1" max="5"
+                       value="{{ profile.year if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">CGPA</label>
+                <input type="number" step="0.01" name="cgpa" class="form-control" required
+                       min="0" max="10"
+                       value="{{ profile.cgpa if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control"
+                       placeholder="10-digit mobile number"
+                       value="{{ profile.phone if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Resume Link (Google Drive / URL)</label>
+                <input type="text" name="resume" class="form-control"
+                       placeholder="Paste your resume link here"
+                       value="{{ profile.resume if profile else '' }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Profile</button>
+            <a href="/student/dashboard" class="btn btn-secondary ms-2">Back</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

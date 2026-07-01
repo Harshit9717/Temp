@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Manage Drives{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-4">📋 Manage Placement Drives</h3>
+
+{% if drives %}
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Applicants</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for drive in drives %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ drive.job_title }}</td>
+            <td>{{ drive.company.company_name }}</td>
+            <td>{{ drive.application_deadline }}</td>
+
+            <td>
+                {% if drive.status == "Approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% elif drive.status == "Rejected" %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% elif drive.status == "Closed" %}
+                    <span class="badge bg-secondary">Closed</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% endif %}
+            </td>
+
+            <td>{{ drive.applications | length }}</td>
+
+            <td>
+                <div class="d-flex gap-1 flex-wrap">
+
+                    {% if drive.status == "Approved" %}
+
+                        <button class="btn btn-success btn-sm" disabled>
+                            Approved
+                        </button>
+
+                        <a href="/admin/drive/{{ drive.id }}/reject"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Reject this drive?')">
+                            Reject
+                        </a>
+
+                        <a href="/admin/drive/{{ drive.id }}/close"
+                           class="btn btn-secondary btn-sm"
+                           onclick="return confirm('Close this drive?')">
+                            Close
+                        </a>
+
+                    {% elif drive.status == "Rejected" %}
+
+                        <a href="/admin/drive/{{ drive.id }}/approve"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Approve this drive?')">
+                            Approve
+                        </a>
+
+                        <button class="btn btn-danger btn-sm" disabled>
+                            Rejected
+                        </button>
+
+                        <a href="/admin/drive/{{ drive.id }}/close"
+                           class="btn btn-secondary btn-sm"
+                           onclick="return confirm('Close this drive?')">
+                            Close
+                        </a>
+
+                    {% elif drive.status == "Closed" %}
+
+                        <a href="/admin/drive/{{ drive.id }}/approve"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Approve this drive?')">
+                            Approve
+                        </a>
+
+                        <a href="/admin/drive/{{ drive.id }}/reject"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Reject this drive?')">
+                            Reject
+                        </a>
+
+                        <button class="btn btn-secondary btn-sm" disabled>
+                            Closed
+                        </button>
+
+                    {% else %}
+
+                        <a href="/admin/drive/{{ drive.id }}/approve"
+                           class="btn btn-success btn-sm"
+                           onclick="return confirm('Approve this drive?')">
+                            Approve
+                        </a>
+
+                        <a href="/admin/drive/{{ drive.id }}/reject"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Reject this drive?')">
+                            Reject
+                        </a>
+
+                        <a href="/admin/drive/{{ drive.id }}/close"
+                           class="btn btn-secondary btn-sm"
+                           onclick="return confirm('Close this drive?')">
+                            Close
+                        </a>
+
+                    {% endif %}
+
+                    <a href="/admin/drive/{{ drive.id }}/edit"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+
+                    <a href="/admin/drive/{{ drive.id }}/delete"
+                       class="btn btn-dark btn-sm"
+                       onclick="return confirm('Delete this drive? All applications will also be deleted.')">
+                        Delete
+                    </a>
+
+                </div>
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% else %}
+
+<div class="alert alert-info">No placement drives found.</div>
+
+{% endif %}
+
+{% endblock %}

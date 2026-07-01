@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Company Dashboard{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">🏢 Company Dashboard</h3>
+<p class="text-muted">Welcome, {{ session.get('user_name') }}!</p>
+
+{% if profile %}
+<div class="alert
+    {% if approval_status == 'Approved' %}alert-success
+    {% elif approval_status == 'Rejected' %}alert-danger
+    {% else %}alert-warning{% endif %}">
+    <strong>Account Status:</strong> {{ approval_status }}
+    {% if approval_status == 'Pending' %}
+    — Your profile is under review by admin.
+    {% elif approval_status == 'Rejected' %}
+    — Your profile was rejected. Contact admin.
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">My Drives</h5>
+                <h2>{{ total_drives }}</h2>
+                <a href="/company/drives" class="text-white">View All →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Applicants</h5>
+                <h2>{{ total_applications }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Approval Status</h5>
+                <h5 class="mt-2">{{ approval_status }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h5>Quick Actions</h5>
+        <a href="/company/profile" class="btn btn-outline-primary me-2">Edit Profile</a>
+        <a href="/company/drives" class="btn btn-outline-success me-2">View My Drives</a>
+        {% if approval_status == "Approved" %}
+        <a href="/company/drive/new" class="btn btn-outline-warning">Post New Drive</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if profile %}
+<div class="card mt-3">
+    <div class="card-header bg-dark text-white">Company Details</div>
+    <div class="card-body">
+        <p><strong>Company:</strong> {{ profile.company_name }}</p>
+        <p><strong>HR Contact:</strong> {{ profile.hr_contact or 'N/A' }}</p>
+        <p><strong>Website:</strong>
+            {% if profile.website %}
+            <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+            {% else %}N/A{% endif %}
+        </p>
+        <p><strong>Description:</strong> {{ profile.description or 'N/A' }}</p>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Browse Drives{% endblock %}
+
+{% block content %}
+
+<h3 class="mb-4">Browse Placement Drives</h3>
+
+{% if session.get('apply_error') %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ session.pop('apply_error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
+{% if session.get('apply_success') %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session.pop('apply_success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
+<form method="GET" action="/student/drives" class="row g-3 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by job title..."
+               value="{{ search }}">
+    </div>
+    <div class="col-md-4">
+        <input type="text" name="branch" class="form-control"
+               placeholder="Filter by branch..."
+               value="{{ branch_filter }}">
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+{% if not profile %}
+<div class="alert alert-warning">
+    Please
+    <a href="/student/profile" class="alert-link">complete your profile</a>
+    before applying to any drive.
+</div>
+{% endif %}
+
+{% if drives %}
+<div class="row">
+
+    {% for drive in drives %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header bg-dark text-white">
+                <strong>{{ drive.job_title }}</strong>
+            </div>
+
+            <div class="card-body">
+                <p class="text-muted mb-1">
+                    <strong>Company:</strong>
+                    {{ drive.company.company_name }}
+                </p>
+                <p class="text-muted mb-1">
+                    <strong>Deadline:</strong>
+                    {{ drive.application_deadline }}
+                </p>
+
+                <hr class="my-2">
+                <p class="mb-1"><strong>Eligibility:</strong></p>
+
+                <p class="mb-1 text-muted">
+                    Branch:
+                    {% if drive.eligibility_branch and drive.eligibility_branch.strip() != "" %}
+                        <span class="badge bg-secondary">
+                            {{ drive.eligibility_branch }}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-success">Open to All</span>
+                    {% endif %}
+                </p>
+
+                <p class="mb-1 text-muted">
+                    Min CGPA:
+                    {% if drive.eligibility_cgpa and drive.eligibility_cgpa > 0 %}
+                        <span class="badge bg-secondary">
+                            {{ drive.eligibility_cgpa }}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-success">No Minimum</span>
+                    {% endif %}
+                </p>
+
+                <p class="mb-1 text-muted">
+                    Year:
+                    {% if drive.eligibility_year and drive.eligibility_year > 0 %}
+                        <span class="badge bg-secondary">
+                            Year {{ drive.eligibility_year }} Only
+                        </span>
+                    {% else %}
+                        <span class="badge bg-success">Any Year</span>
+                    {% endif %}
+                </p>
+
+                <hr class="my-2">
+                <p class="card-text text-muted">
+                    {{ drive.job_description[:120] }}...
+                </p>
+            </div>
+
+            <div class="card-footer bg-white">
+
+                {% if drive.id in applied_ids %}
+
+                    <button class="btn btn-success btn-sm w-100" disabled>
+                        Already Applied
+                    </button>
+
+                {% elif not profile %}
+
+                    <a href="/student/profile"
+                       class="btn btn-warning btn-sm w-100">
+                        Complete Profile First
+                    </a>
+
+                {% elif profile.is_blacklisted %}
+
+                    <button class="btn btn-danger btn-sm w-100" disabled>
+                        Account Blacklisted
+                    </button>
+
+                {% else %}
+
+                    <a href="/student/drive/{{ drive.id }}/apply"
+                       class="btn btn-primary btn-sm w-100"
+                       onclick="return confirm('Apply to {{ drive.job_title }} at {{ drive.company.company_name }}?')">
+                        Apply Now
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+    No placement drives available right now. Check back later.
+</div>
+
+{% endif %}
+
+{% endblock %}

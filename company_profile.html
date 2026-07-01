@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Company Profile{% endblock %}
+
+{% block content %}
+<h3 class="mb-4">🏢 Company Profile</h3>
+
+{% if success %}
+<div class="alert alert-success">{{ success }}</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" action="/company/profile">
+            <div class="mb-3">
+                <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                <input type="text" name="company_name" class="form-control" required
+                       value="{{ profile.company_name if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">HR Contact</label>
+                <input type="text" name="hr_contact" class="form-control"
+                       value="{{ profile.hr_contact if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Website</label>
+                <input type="url" name="website" class="form-control"
+                       placeholder="https://yourcompany.com"
+                       value="{{ profile.website if profile else '' }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Company Description</label>
+                <textarea name="description" class="form-control" rows="4">{{ profile.description if profile else '' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Profile</button>
+            <a href="/company/dashboard" class="btn btn-secondary ms-2">Back</a>
+        </form>
+    </div>
+</div>
+
+{% if not profile %}
+<div class="alert alert-info mt-4">
+    ℹ️ After saving your profile, Admin will review and approve your registration before you can post drives.
+</div>
+{% endif %}
+
+{% endblock %}
